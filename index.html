@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-08">
+  <title>jQuery Practice</title>
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+  <script type="text/javascript" src="assets/js/ajax-jquery.js"></script>
+  <script type="text/javascript" src="assets/js/bootstrap.js"></script>
+  <script type="text/javascript" src="assets/js/bootstrap-jquery.js"></script>
+  <script type="text/javascript" src="assets/js/jquery-non-slim.js"></script>
+  <script type="text/javascript" src="assets/js/jquery-ui-non-slim.js"></script>
+  <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="assets/css/jquery-ui-non-slim.css">
+  <style id="css_content_target">
+    .toggleButton {
+      border: 0.1em solid #000000;
+      display: inline-block;
+      height: auto;
+      padding: 1em;
+    }
+
+    #menu {
+      text-align: center;
+      height: 5%;
+      padding-bottom: 1em;
+      margin-top: 0.5em;
+      border: 0.1em solid #000000;
+      width: 100%;
+    }
+
+    #css_button {
+      margin-left: 0.25em;
+      margin-right: 0.25em;
+      margin-top: 0.5em;
+    }
+
+    #js_button {
+      margin-right: 0.25em;
+    }
+
+    #output_button {
+      border-top-right-radius: 10%;
+      border-bottom-right-radius: 10%;
+      border: 0.1em solid #000000;
+      display: inline-block;
+      height: auto;
+      padding: 1em;
+      background-color: rgb(29, 228, 43);
+    }
+
+    #html_button {
+      border-top-left-radius: 10%;
+      border-bottom-left-radius: 10%;
+    }
+
+    #logo {
+      //float: left;
+      font-weight: bold;
+      margin-right: 0.25em;
+    }
+
+    .col-md-6 {
+      background-color: #ffffff;
+      display: none;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      float: left;
+      border-top: 0.1em solid #000000;
+      border-bottom: 0.1em solid #000000;
+    }
+
+    #html_content {
+      border-left: 0.1em solid #000000;
+      border-right: 0.05em solid #000000;
+      display: inline-block;
+    }
+
+    #css_content {
+      border-left: 0.05em solid #000000;
+      border-right: 0.05em solid #000000;
+    }
+
+    #js_content {
+      border-left: 0.05em solid #000000;
+      border-right: 0.05em solid #000000;
+    }
+
+    #output_content {
+      border-left: 0.05em solid #000000;
+      border-right: 0.1em solid #000000;
+      display: inline-block;
+    }
+
+    .active {
+      background-color: rgb(188, 232, 14);
+    }
+
+    .hover {
+      background-color: rgb(12, 55, 240);
+    }
+
+    #html_textarea,
+    #css_textarea,
+    #js_textarea {
+      height: 100%;
+      width: 100%;
+      padding: 0.5em;
+      resize: none;
+    }
+
+    #output_iframe {
+      height: 100%;
+      width: 100%;
+      padding: 0.5em;
+      resize: none;
+    }
+
+    .show {
+      display: none;
+    }
+
+    html {
+      background: no-repeat center center fixed;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+    }
+  </style>
+</head>
+
+<body style="height: 100vh;" id="html_content_target">
+  <div style="text-align: center;">
+    <div id="logo">CodePlayer</div>
+    <div class="toggleButton" id="html_button">HTML</div>
+    <div class="toggleButton" id="css_button">CSS</div>
+    <div class="toggleButton" id="js_button">JavaScript</div>
+    <div id="output_button">Output</div>
+  </div>
+  <div style="height: 100%; margin-top: 0.5em; padding: 0;">
+    <div class="col-md-12" style="height: 100%; padding-left: 0; padding-right: 0;">
+      <div class="col-md-6" id="html_content">
+        <div id="html_content_result"></div>
+        <textarea id="html_textarea">
+
+          </textarea>
+      </div>
+      <div class="col-md-6" id="css_content">
+        <div id="css_content_result"></div>
+        <textarea id="css_textarea">
+
+          </textarea>
+      </div>
+      <div class="col-md-6" id="js_content">
+        <div id="js_content_result"><div class="alert alert-danger">Error Caught</div></div>
+        <textarea id="js_textarea">
+
+          </textarea>
+      </div>
+      <div class="col-md-6" id="output_content">
+        <iframe id="output_iframe" src="http://localhost/jquery/code_player/index.html">
+
+        </iframe>
+      </div>
+    </div>
+  </div>
+  <script id="js_content_target">
+    function updateOutput() {
+      $("#output_iframe").contents().find("html").html('<html><head><style>' + $("#css_textarea").val() + '</style></head><body>' + $("#html_textarea").val() + '</body></html>');
+      try {
+        document.getElementById("output_iframe").contentWindow.eval($("#js_textarea").val());
+        $("#js_content_result").hide();
+      } catch (exception) {
+        $("#js_content_result").show();
+      } finally {}
+    }
+
+    $(document).ready(function() {
+      let buttonArray = ["html", "css", "js"];
+
+      $(".toggleButton").mouseenter(function() {
+        $(this).addClass("hover");
+      }).mouseleave(function() {
+        $(this).removeClass("hover");
+      });
+
+      $(".toggleButton").click(function() {
+        $(this).addClass("active");
+        $(this).removeClass("hover");
+        for (var i = 0; i < buttonArray.length; i++) {
+          if ($(this).attr("id") != buttonArray[i] + "_button") {
+            $("#" + buttonArray[i] + "_button").removeClass("active");
+            $("#" + buttonArray[i] + "_content").css("display", "none");
+          } else {
+            $("#" + buttonArray[i] + "_content").css("display", "inline-block");
+          }
+        }
+      });
+
+      $("#output_iframe").on('load', function() {
+        updateOutput();
+
+        for (i = 0; i < buttonArray.length; i++) {
+          $("#" + buttonArray[i] + "_textarea").on("change keyup paste", function() {
+            updateOutput();
+          });
+        }
+
+      });
+    });
+  </script>
+</body>
+
+</html>
